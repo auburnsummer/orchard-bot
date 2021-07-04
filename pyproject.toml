@@ -10,6 +10,7 @@ python = "^3.8"
 starlette = "^0.15.0"
 uvicorn = "^0.14.0"
 python-dotenv = "^0.18.0"
+PyNaCl = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 
