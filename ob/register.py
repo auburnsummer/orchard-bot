@@ -1,9 +1,14 @@
 import os
 import httpx
 
-from .constants import BOT_TOKEN, APPLICATION_ID, DISCORD_API_URL
+from .constants import BOT_TOKEN, APPLICATION_ID, DISCORD_API_URL, DEV_GUILD
 
 bot_auth = {'Authorization': f"Bot {BOT_TOKEN}"}
+
+if DEV_GUILD:
+    base_url = f"{DISCORD_API_URL}/applications/{APPLICATION_ID}/commands"
+else:
+    base_url = f"{DISCORD_API_URL}/applications/{APPLICATION_ID}/commands"
 
 """
 Get a list of all current GLOBAL slash commands.
