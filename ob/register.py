@@ -32,7 +32,7 @@ update slash commands
 """
 async def update_slash_commands(commands):
     async with httpx.AsyncClient() as client:
-        r = await client.put(f"{base_url}/commands", json=commands, headers=bot_auth)
+        r = await client.put(f"{base_url}", json=commands, headers=bot_auth)
     return r
 
 

@@ -16,7 +16,7 @@ class SlashRoute:
         self._handler = handler
         self._default_permission = default_permission
 
-    def to_dict(self):
+    def api(self):
         return {
             'name' : self._name,
             'description': self._description,
@@ -27,10 +27,13 @@ class SlashRouter:
     def __init__(self, routes):
         self._routes = routes
 
-    def to_dict(self):
-        return {
-            
-        }
+    def api(self):
+        return [r.api() for r in self._routes]
 
     def handle(self, body):
-        return JSONResponse({'hello': 'world'})
+        return JSONResponse({
+            "type" : 4,
+            "data" : {
+                "content": "pong!"
+            }
+        })
