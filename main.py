@@ -2,10 +2,12 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import asyncio
+from collections import defaultdict
+
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from collections import defaultdict
 import uvicorn
 
 from nacl.signing import VerifyKey
@@ -15,11 +17,12 @@ from ob.slash_router import SlashRoute, SlashRouter
 from ob.constants import PRIVATE_KEY
 from ob.register import update_slash_commands
 
-import asyncio
+import ob.commands.ping
+
 
 # All the routes we're using go here.
 router = SlashRouter(routes=[
-    SlashRoute(name='ping', description='responds with pong!', handler=None)
+    SlashRoute(name='ping', description='responds with PONG!', handler=ob.commands.ping.ping)
 ])
 
 """
