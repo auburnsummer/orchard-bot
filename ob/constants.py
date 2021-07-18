@@ -8,3 +8,14 @@ DISCORD_API_URL = "https://discord.com/api/v8"
 # this is because guild commands refresh instantly whereas global takes ~1 hr
 DEV_GUILD = os.environ["DEV_GUILD"] if "DEV_GUILD" in os.environ else False
 APPLICATION_ID = os.environ["APPLICATION_ID"]
+
+class OptionType:
+    SUB_COMMAND = 1
+    SUB_COMMAND_GROUP = 2
+    STRING = 3
+    INTEGER = 4
+    BOOLEAN = 5
+    USER = 6
+    CHANNEL = 7
+    ROLE = 8
+    MENTIONABLE = 9

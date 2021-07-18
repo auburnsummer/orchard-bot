@@ -1,27 +1,55 @@
-# class Option:
-#     def __init__(self, type, name, description, required=False, choices=None, options=None):
-#         self._type = type
-#         self._name = name
-#         self._description = description
-#         self._required = required
-#         self._choices = choices
-#         self._options = options
-
 from starlette.responses import JSONResponse
 
+class SlashOptionChoice:
+    def __init__(self, name, value):
+        self._name = name
+        self._value = value
+
+    def api(self):
+        return {
+            "name": self._name,
+            "value": self._value
+        }
+
+class SlashOption:
+    def __init__(self, type, name, description, required=False, choices=None):
+        self._type = type
+        self._name = name
+        self._description = description
+        self._required = required
+        self._choices = choices
+
+    def api(self):
+        output = {
+            'type': self._type,
+            'name': self._name,
+            'description': self._description,
+            'required': self._required
+        }
+        # if the option has choices, add them.
+        if self._choices is not None:
+            output['choices'] = [c.api() for c in self._choices]
+        
+        return output
+
 class SlashRoute:
-    def __init__(self, name, description, handler, default_permission=True):
+    def __init__(self, name, description, handler, default_permission=True, options=None):
         self._name = name
         self._description = description
         self._handler = handler
         self._default_permission = default_permission
+        self._options = options
 
     def api(self):
-        return {
+        output = {
             'name' : self._name,
             'description': self._description,
             'default_permission': self._default_permission
         }
+        if self._options is not None:
+            output['options'] = [o.api() for o in self._options]
+            
+        return output
 
 class SlashRouter:
     def __init__(self, routes):

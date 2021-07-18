@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import asyncio
+import json
 from collections import defaultdict
 
 from starlette.applications import Starlette
@@ -13,16 +14,26 @@ import uvicorn
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
-from ob.slash_router import SlashRoute, SlashRouter
-from ob.constants import PRIVATE_KEY
+from ob.slash_router import SlashOption, SlashRoute, SlashRouter
+from ob.constants import OptionType, PRIVATE_KEY
 from ob.register import update_slash_commands
 
 import ob.commands.ping
 
 
+
 # All the routes we're using go here.
 router = SlashRouter(routes=[
-    SlashRoute(name='ping', description='responds with PONG!', handler=ob.commands.ping.ping)
+    SlashRoute(name='ping', description='responds with pong!', handler=ob.commands.ping.ping),
+    SlashRoute(
+        name='add',
+        description='add two numbers together',
+        handler=ob.commands.ping.ping, 
+        options=[
+            SlashOption(type=OptionType.INTEGER, name='a', description='the first number', required=True),
+            SlashOption(type=OptionType.INTEGER, name='b', description='the second number', required=True)
+        ]
+    )
 ])
 
 """
@@ -50,20 +61,23 @@ async def interaction_handler(request):
     
     return router.handle(body)
 
+
+
+async def prerun_update_slash_commands():
+    print("updating slash commands...")
+    payload = router.api()
+    print(json.dumps(payload))
+    print(await update_slash_commands(payload))
+    print("done!")
+
 # two identical routes. this is so i can change it in discord developer options to check
 # we are handling ping and auth correctly.
 app = Starlette(debug=True, routes=[
     Route('/interactions', interaction_handler, methods=['POST']),
     Route('/interactions2', interaction_handler, methods=['POST'])
+], on_startup=[
+    prerun_update_slash_commands
 ])
 
-async def prerun():
-    print(await update_slash_commands(router.api()))
-
-
 if __name__ == '__main__':
-    print("Updating slash commands...")
-    asyncio.run(prerun())
-    print("done!")
-
     uvicorn.run(app, host='0.0.0.0', port=80)
