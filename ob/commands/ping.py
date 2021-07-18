@@ -1,4 +1,5 @@
 
+from ob.constants import ResponseType
 from starlette.responses import JSONResponse
 
 def ping(body):
@@ -6,4 +7,4 @@ def ping(body):
     #  - the return code should be 200
     #  - the response body should be a JSON object with a key 'type' whose value is 4
     #  - the response body should have a key 'data.content' whose value is 'pong'
-    return JSONResponse({"type": 4, "data": {"content": "pong"}})
+    return JSONResponse({"type": ResponseType.CHANNEL_MESSAGE_WITH_SOURCE, "data": {"content": "pong"}})

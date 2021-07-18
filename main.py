@@ -19,6 +19,7 @@ from ob.constants import OptionType, PRIVATE_KEY
 from ob.register import update_slash_commands
 
 import ob.commands.ping
+import ob.commands.add
 
 
 
@@ -28,7 +29,7 @@ router = SlashRouter(routes=[
     SlashRoute(
         name='add',
         description='add two numbers together',
-        handler=ob.commands.ping.ping, 
+        handler=ob.commands.add.add, 
         options=[
             SlashOption(type=OptionType.INTEGER, name='a', description='the first number', required=True),
             SlashOption(type=OptionType.INTEGER, name='b', description='the second number', required=True)
