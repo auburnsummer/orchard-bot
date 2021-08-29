@@ -1,4 +1,3 @@
-
 """
 Given a list of args as strings and a body which is a Discord interaction,
 return a list of values corresponding to the given args.
