@@ -18,22 +18,25 @@ from ob.slash_router import SlashOption, SlashRoute, SlashRouter
 from ob.constants import OptionType, PRIVATE_KEY
 from ob.register import update_slash_commands
 
-import ob.commands.ping
-import ob.commands.add
-
-
+import ob.commands as commands
 
 # All the routes we're using go here.
 router = SlashRouter(routes=[
-    SlashRoute(name='ping', description='responds with pong!', handler=ob.commands.ping.ping),
+    SlashRoute(name='ping', description='responds with pong!', handler=commands.ping),
     SlashRoute(
         name='add',
         description='add two numbers together',
-        handler=ob.commands.add.add, 
+        handler=commands.add, 
         options=[
             SlashOption(type=OptionType.INTEGER, name='a', description='the first number', required=True),
             SlashOption(type=OptionType.INTEGER, name='b', description='the second number', required=True)
         ]
+    ),
+    SlashRoute(
+        name='dtest',
+        description='testing deferred responses',
+        handler=commands.dtest,
+        defer=True
     )
 ])
 
@@ -60,10 +63,12 @@ async def interaction_handler(request):
     if body['type'] == 1:
         return JSONResponse({'type' : 1})
     
+    # otherwise, it goes to the router for further processing.
     return router.handle(body)
 
-
-
+"""
+Before launching, update the slash commands defined by the router.
+"""
 async def prerun_update_slash_commands():
     print("updating slash commands...")
     payload = router.api()
@@ -80,5 +85,7 @@ app = Starlette(debug=True, routes=[
     prerun_update_slash_commands
 ])
 
+# Discord requires HTTPS. I'm using a cloudflare proxy, but it should also be possible to use a reverse
+# proxy + lets encrypt instead.
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=80)

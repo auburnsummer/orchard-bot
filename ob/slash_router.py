@@ -1,3 +1,5 @@
+from starlette.background import BackgroundTask
+from ob.constants import ResponseType
 from starlette.responses import JSONResponse
 
 class SlashOptionChoice:
@@ -33,12 +35,13 @@ class SlashOption:
         return output
 
 class SlashRoute:
-    def __init__(self, name, description, handler, default_permission=True, options=None):
+    def __init__(self, name, description, handler, default_permission=True, options=None, defer=False):
         self._name = name
         self._description = description
         self._handler = handler
         self._default_permission = default_permission
         self._options = options
+        self._defer = defer
 
     def api(self):
         output = {
@@ -67,8 +70,13 @@ class SlashRouter:
         route_name = body['data']['name']
         # Check if the route name is present in the mapping.
         if route_name in self._route_map:
-            # Execute the associated handler.
-            return self._route_map[route_name]._handler(body)
+            # Execute the associated handler. If it's not deferred, we just return it straightaway.
+            if not self._route_map[route_name]._defer:
+                return self._route_map[route_name]._handler(body)
+            else:
+                # Return a deferred response, which is type 5.
+                deferred_task = BackgroundTask(self._route_map[route_name]._handler, body)
+                return JSONResponse({"type": ResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE}, background=deferred_task)
         else:
             # Otherwise, return a default response. The default response has a 200 return code.
             # The key 'type' is 4, and the key 'data.content' is something like "oh no"
