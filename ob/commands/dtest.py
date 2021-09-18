@@ -1,11 +1,20 @@
 from ob.interactions import Interactor
-from ob.message_builder import MessageBuilder
+from ob.message_builder import ActionRow, Button, MessageBuilder as M
 
 async def dtest(body):
     async with Interactor(body["token"]) as i:
-        await i.edit(MessageBuilder().content("ayayayayayaya"), "@original")
+        await i.edit(M().content("ayayayayayaya"), "@original")
 
-        await i.post(MessageBuilder().content("popopopopo").ephemeral())
+        await i.post(
+            M()
+            .content("popopopopo")
+            .ephemeral()
+            .row(
+                ActionRow(
+                    Button(label="HELLO")
+                )
+            )
+        )
 
         # await i.post({
         #     "content": "popopopopopo",
