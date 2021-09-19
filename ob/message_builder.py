@@ -1,5 +1,4 @@
-from ob.constants import ButtonStyle
-from . import ActionRow
+from ob.constants import ButtonStyle, ComponentType
 
 class MessageBuilder:
     def __init__(self):
@@ -18,9 +17,10 @@ class MessageBuilder:
         return self
 
     def payload(self):
+        print(self._dict)
         return self._dict
 
-    def row(self, row: ActionRow):
+    def row(self, row: 'ActionRow'):
         if "components" not in self._dict:
             self._dict["components"] = []
         self._dict["components"].append(row.payload())
@@ -32,7 +32,7 @@ class ActionRow:
 
     def payload(self):
         return {
-            "type": 1,
+            "type": ComponentType.ACTION_ROW,
             "components": [c.payload() for c in self._components]
         }
 
@@ -45,9 +45,17 @@ class Button:
         url = None, 
         disabled = False):
         # create a dictionary consisting only of the values given that were not None
-        args = locals().copy()
+        args = {
+            'style': style,
+            'label': label,
+            'emoji': emoji,
+            'url': url,
+            'disabled': disabled
+        }
+
         self._dict = {k: v for k, v in args.items() if v is not None}
         self._dict['custom_id'] = 'hipehiofwheofie'
+        self._dict['type'] = ComponentType.BUTTON
 
     def payload(self):
         return self._dict

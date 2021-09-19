@@ -14,7 +14,7 @@ from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 from ob.slash_router import SlashOption, SlashRoute, SlashRouter
-from ob.constants import OptionType, PRIVATE_KEY
+from ob.constants import OptionType, PUBLIC_KEY
 from ob.register import update_slash_commands
 
 import ob.commands as commands
@@ -44,7 +44,7 @@ Starlette handler for the /interactions endpoint.
 """
 async def interaction_handler(request):
     # Check the headers are correct: https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
-    verify_key = VerifyKey(bytes.fromhex(PRIVATE_KEY))
+    verify_key = VerifyKey(bytes.fromhex(PUBLIC_KEY))
     rheaders = defaultdict(str, request.headers)
     signature = rheaders["x-signature-ed25519"]
     timestamp = rheaders["x-signature-timestamp"]
