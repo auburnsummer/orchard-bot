@@ -14,10 +14,12 @@ from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 from ob.slash_router import SlashOption, SlashRoute, SlashRouter
-from ob.constants import OptionType, PUBLIC_KEY
+from ob.constants import OptionType, PUBLIC_KEY, ResponseType
 from ob.register import update_slash_commands
 
 import ob.commands as commands
+
+import ob.crosscode as crosscode
 
 # All the routes we're using go here.
 router = SlashRouter(routes=[
@@ -60,10 +62,19 @@ async def interaction_handler(request):
 
     # handle ping event...
     if body['type'] == 1:
-        return JSONResponse({'type' : 1})
+        return JSONResponse({'type' : ResponseType.PONG})
+
+    # handle slash commands...
+    if body['type'] == 2:
+        return router.handle(body)
+
+    # handle components (button clicks, etc...)
+    # under our model, all components are per-interaction (we don't have "permanent" buttons)
+    if body['type'] == 3:
+        return await crosscode.handle(body)
     
-    # otherwise, it goes to the router for further processing.
-    return router.handle(body)
+    print(body)
+    return JSONResponse({'hello': 'world'})
 
 """
 Before launching, update the slash commands defined by the router.

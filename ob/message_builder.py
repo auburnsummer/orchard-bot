@@ -42,19 +42,20 @@ class Button:
         style = ButtonStyle.PRIMARY,
         label = None,
         emoji = None,
-        url = None, 
-        disabled = False):
+        url = None,
+        disabled = False,
+        custom_id = None):
         # create a dictionary consisting only of the values given that were not None
         args = {
             'style': style,
             'label': label,
             'emoji': emoji,
             'url': url,
-            'disabled': disabled
+            'disabled': disabled,
+            'custom_id': custom_id
         }
 
         self._dict = {k: v for k, v in args.items() if v is not None}
-        self._dict['custom_id'] = 'hipehiofwheofie'
         self._dict['type'] = ComponentType.BUTTON
 
     def payload(self):
