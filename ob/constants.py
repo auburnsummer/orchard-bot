@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 PUBLIC_KEY = os.environ["PUBLIC_KEY"]
@@ -8,6 +9,9 @@ DISCORD_API_URL = "https://discord.com/api/v8"
 # this is because guild commands refresh instantly whereas global takes ~1 hr
 DEV_GUILD = os.environ["DEV_GUILD"] if "DEV_GUILD" in os.environ else False
 APPLICATION_ID = os.environ["APPLICATION_ID"]
+
+DB_PATH = Path.cwd() / "orchard.db"
+DB_URL = "https://api.rhythm.cafe/orchard.db"
 
 class ComponentType:
     ACTION_ROW = 1

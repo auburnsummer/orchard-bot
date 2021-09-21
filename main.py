@@ -1,5 +1,6 @@
 # Load and run dotenv before everything else
 from dotenv import load_dotenv
+import httpx
 load_dotenv()
 
 import json
@@ -14,8 +15,9 @@ from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
 from ob.slash_router import SlashOption, SlashRoute, SlashRouter
-from ob.constants import OptionType, PUBLIC_KEY, ResponseType
+from ob.constants import DB_PATH, DB_URL, OptionType, PUBLIC_KEY, ResponseType
 from ob.register import update_slash_commands
+from pathlib import Path
 
 import ob.commands as commands
 
@@ -94,13 +96,27 @@ async def prerun_update_slash_commands():
     print((await update_slash_commands(payload)).json())
     print("done!")
 
+"""
+Before launching, if we don't have our copy of the db download it from api.rhythm.cafe
+"""
+async def prerun_get_db():
+    db_path = Path(DB_PATH)
+    if not db_path.is_file():
+        print(f"no db found at {DB_PATH}, downloading...")
+        async with httpx.AsyncClient() as client:
+            r = await client.get(DB_URL)
+            with open(DB_PATH, "wb") as f:
+                f.write(r.content)
+            print("downloaded.")
+
 # two identical routes. this is so i can change it in discord developer options to check
 # we are handling ping and auth correctly.
 app = Starlette(debug=True, routes=[
     Route('/interactions', interaction_handler, methods=['POST']),
     Route('/interactions2', interaction_handler, methods=['POST'])
 ], on_startup=[
-    prerun_update_slash_commands
+    prerun_update_slash_commands,
+    prerun_get_db
 ])
 
 # Discord requires HTTPS. I'm using a cloudflare proxy, but it should also be possible to use a reverse
