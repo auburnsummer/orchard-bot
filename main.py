@@ -38,6 +38,15 @@ router = SlashRouter(routes=[
         description='testing deferred responses',
         handler=commands.dtest,
         defer=True
+    ),
+    SlashRoute(
+        name='counter',
+        description='Another test',
+        handler=commands.counter,
+        defer=True,
+        options=[
+            SlashOption(type=OptionType.INTEGER, name='increment', description='count to increment by', required=True)
+        ]
     )
 ])
 
@@ -82,8 +91,7 @@ Before launching, update the slash commands defined by the router.
 async def prerun_update_slash_commands():
     print("updating slash commands...")
     payload = router.api()
-    print(json.dumps(payload))
-    print(await update_slash_commands(payload))
+    print((await update_slash_commands(payload)).json())
     print("done!")
 
 # two identical routes. this is so i can change it in discord developer options to check

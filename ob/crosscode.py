@@ -5,9 +5,13 @@ import textwrap
 
 from starlette.responses import JSONResponse
 
+# Mapping of UUIDs to futures.
 _registry = {}
 
 async def future():
+    """
+    Generate a UUID, add it to the future registry and return it.
+    """
     loop = asyncio.get_running_loop()
     new_uuid = uuid4().hex
     new_future = loop.create_future()
@@ -15,13 +19,25 @@ async def future():
     return new_uuid
 
 def clean(uuid):
+    """
+    Remove a UUID from the registry.
+    """
     if uuid in _registry:
         del _registry[uuid]
+
+async def refresh(uuid):
+    """
+    Refresh a future in the registry so it can be used again.
+    """
+    loop = asyncio.get_running_loop()
+    new_future = loop.create_future()
+    _registry[uuid] = new_future
 
 async def handle(body):
     uuid = body['data']['custom_id']
     if uuid in _registry and not _registry[uuid].done():
         _registry[uuid].set_result(uuid)
+        await refresh(uuid)
         return JSONResponse({'type': ResponseType.DEFERRED_UPDATE_MESSAGE})
     else:
         error_text = textwrap.dedent(f"""

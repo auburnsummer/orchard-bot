@@ -1,3 +1,4 @@
+from ob.utils import get_id_from_response
 from ob.interactions import Interactor
 from ob.message_builder import ActionRow, Button, MessageBuilder as M
 
@@ -10,7 +11,7 @@ async def dtest(body):
 
         [b1, b2] = [await i.uuid() for _ in range(2)]
 
-        res = await i.post(
+        p2 = get_id_from_response(await i.post(
             M()
             .content("popopopopo")
             .ephemeral()
@@ -20,9 +21,7 @@ async def dtest(body):
                     Button(label="right", custom_id=b2)
                 )
             )
-        )
-
-        print(res)
+        ))
 
         clicked = await cc.button_press(b1, b2)
 
@@ -35,7 +34,7 @@ async def dtest(body):
 
         print("you clicked!")
         print(clicked)
-        await i.edit(M().content(text), "@original")
+        await i.edit(M().content(text).clear_rows(), p2)
 
 
         # await i.post({

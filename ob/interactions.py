@@ -29,6 +29,15 @@ class Interactor:
             cc.clean(uuid)
         await self.client.aclose()
 
+    async def get(self, id):
+        """
+        Wrapper around discord API get message (from this webhook)
+        """
+        return await self.client.get(
+            f"{base_url}/{self._token}/messages/{id}",
+            headers=bot_auth
+        )
+
     async def edit(self, mb: MessageBuilder, id):
         """
         Wrapper around discord API edit message.
@@ -50,6 +59,15 @@ class Interactor:
         return await self.client.post(
             f"{base_url}/{self._token}",
             json=mb.payload(),
+            headers=bot_auth
+        )
+
+    async def delete(self, id):
+        """
+        Wrapper around discord API delete message.
+        """
+        return await self.client.delete(
+            f"{base_url}/{self._token}/messages/{id}",
             headers=bot_auth
         )
 

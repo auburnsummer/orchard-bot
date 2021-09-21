@@ -3,7 +3,6 @@ from ob.constants import ButtonStyle, ComponentType
 class MessageBuilder:
     def __init__(self):
         self._dict = {
-            "content": "",
             "flags": 0
         }
 
@@ -24,6 +23,10 @@ class MessageBuilder:
         if "components" not in self._dict:
             self._dict["components"] = []
         self._dict["components"].append(row.payload())
+        return self
+
+    def clear_rows(self):
+        self._dict["components"] = []
         return self
 
 class ActionRow:
