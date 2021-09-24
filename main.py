@@ -20,7 +20,7 @@ from ob.register import get_command_to_id_mapping, update_slash_commands, update
 from pathlib import Path
 
 import ob.commands as commands
-
+import ob.handlers as handlers
 import ob.crosscode as crosscode
 
 # All the routes we're using go here.
@@ -106,7 +106,8 @@ async def prerun_get_db():
 # we are handling ping and auth correctly.
 app = Starlette(debug=True, routes=[
     Route('/interactions', interaction_handler, methods=['POST']),
-    Route('/interactions2', interaction_handler, methods=['POST'])
+    Route('/interactions2', interaction_handler, methods=['POST']),
+    Route('/orchard.db', handlers.orchard_dot_db, methods=['GET'])
 ], on_startup=[
     prerun_update_slash_commands,
     prerun_get_db

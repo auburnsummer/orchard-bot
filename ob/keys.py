@@ -27,7 +27,7 @@ def gen_passcode():
 # 1B8UZ/rtWkR3ycgKjPRrhi4jqv5e0Qn3ixPk/SuFn9orlr2TmzDE7aDLCVSr+gNKahtxWzKHWH429V0hpwpuAtDJ1jlqS4p6czg2CzLdy7YQPYufBe1oZ9sNow==
 
 """
-Check if a passcode is valid.
+Check if a passcode is valid. throws exception if not.
 """
 def check_passcode(s):
     decoded_bytes = base64.b64decode(s)
