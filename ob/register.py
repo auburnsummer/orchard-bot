@@ -35,4 +35,17 @@ async def update_slash_commands(commands):
         r = await client.put(f"{base_url}", json=commands, headers=bot_auth)
     return r
 
+"""
+wefawefawef
+"""
+def get_command_to_id_mapping(json_resp):
+    return {c['name']: c['id'] for c in json_resp}
 
+"""
+update permissions
+"""
+async def update_slash_permissions(permissions):
+    if DEV_GUILD:
+        async with httpx.AsyncClient() as client:
+            r = await client.put(f"{base_url}/permissions", json=permissions, headers=bot_auth)
+        return r

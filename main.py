@@ -14,9 +14,9 @@ import uvicorn
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
-from ob.slash_router import SlashOption, SlashRoute, SlashRouter
-from ob.constants import DB_PATH, DB_URL, OptionType, PUBLIC_KEY, ResponseType
-from ob.register import update_slash_commands
+from ob.slash_router import SlashOption, SlashOptionPermission, SlashRoute, SlashRouter
+from ob.constants import DB_PATH, DB_URL, PATHLAB_ROLE, OptionType, PUBLIC_KEY, PermissionType, ResponseType
+from ob.register import get_command_to_id_mapping, update_slash_commands, update_slash_permissions
 from pathlib import Path
 
 import ob.commands as commands
@@ -46,6 +46,8 @@ router = SlashRouter(routes=[
         description='Another test',
         handler=commands.counter,
         defer=True,
+        default_permission=False,
+        permissions=[SlashOptionPermission(id=PATHLAB_ROLE, type=PermissionType.ROLE, permission=True)],
         options=[
             SlashOption(type=OptionType.INTEGER, name='increment', description='count to increment by', required=True)
         ]
@@ -93,7 +95,15 @@ Before launching, update the slash commands defined by the router.
 async def prerun_update_slash_commands():
     print("updating slash commands...")
     payload = router.api()
-    print((await update_slash_commands(payload)).json())
+    print(payload)
+    resp = (await update_slash_commands(payload)).json()
+    print(resp)
+
+    mapping = get_command_to_id_mapping(resp)
+    print("updating permissions...")
+    payload2 = router.permission_api(mapping)
+    print(payload2)
+    print((await update_slash_permissions(payload2)).json())
     print("done!")
 
 """

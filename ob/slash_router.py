@@ -3,6 +3,19 @@ from starlette.background import BackgroundTask
 from ob.constants import ResponseType
 from starlette.responses import JSONResponse
 
+class SlashOptionPermission:
+    def __init__(self, id, type, permission):
+        self._id = id
+        self._type = type
+        self._permission = permission
+
+    def permission_api(self):
+        return {
+            "id": self._id,
+            "type": self._type,
+            "permission": self._permission
+        }
+
 class SlashOptionChoice:
     def __init__(self, name, value):
         self._name = name
@@ -36,13 +49,14 @@ class SlashOption:
         return output
 
 class SlashRoute:
-    def __init__(self, name, description, handler, default_permission=True, options=None, defer=False):
+    def __init__(self, name, description, handler, default_permission=True, options=None, defer=False, permissions=None):
         self._name = name
         self._description = description
         self._handler = handler
         self._default_permission = default_permission
         self._options = options
         self._defer = defer
+        self._permissions = permissions
 
     def api(self):
         output = {
@@ -55,6 +69,12 @@ class SlashRoute:
             
         return output
 
+    def permission_api(self, id):
+        return {
+            'id': id,
+            'permissions': [p.permission_api() for p in self._permissions]
+        }
+
 class SlashRouter:
     def __init__(self, routes):
         self._routes = routes
@@ -65,6 +85,9 @@ class SlashRouter:
 
     def api(self):
         return [r.api() for r in self._routes]
+
+    def permission_api(self, mapping):
+        return [r.permission_api(mapping[r._name]) for r in self._routes if r._permissions is not None]
 
     def handle(self, body):
         # Get the route name from the body. The body is a dictionary. The route name is located under the key "data.name"
