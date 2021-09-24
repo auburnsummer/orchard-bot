@@ -26,5 +26,7 @@ def gen_passcode():
 """
 Check if a passcode is valid.
 """
-def check_passcode(c):
+def check_passcode(s):
+    decoded_bytes = base64.b64decode(s)
+    plaintext = box.decrypt(decoded_bytes)
     return True
