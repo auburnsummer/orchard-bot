@@ -26,32 +26,7 @@ import ob.crosscode as crosscode
 # All the routes we're using go here.
 router = SlashRouter(routes=[
     SlashRoute(name='ping', description='responds with pong!', handler=commands.ping),
-    SlashRoute(
-        name='add',
-        description='add two numbers together',
-        handler=commands.add, 
-        options=[
-            SlashOption(type=OptionType.INTEGER, name='a', description='the first number', required=True),
-            SlashOption(type=OptionType.INTEGER, name='b', description='the second number', required=True)
-        ]
-    ),
-    SlashRoute(
-        name='dtest',
-        description='testing deferred responses',
-        handler=commands.dtest,
-        defer=True
-    ),
-    SlashRoute(
-        name='counter',
-        description='Another test',
-        handler=commands.counter,
-        defer=True,
-        default_permission=False,
-        permissions=[SlashOptionPermission(id=PATHLAB_ROLE, type=PermissionType.ROLE, permission=True)],
-        options=[
-            SlashOption(type=OptionType.INTEGER, name='increment', description='count to increment by', required=True)
-        ]
-    )
+    SlashRoute(name='zpasscode', description='return a passcode for pathlab use (pathlab people only)', handler=commands.passcode, defer=True)
 ])
 
 """

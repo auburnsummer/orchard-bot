@@ -11,6 +11,8 @@ DEV_GUILD = os.environ["DEV_GUILD"] if "DEV_GUILD" in os.environ else False
 APPLICATION_ID = os.environ["APPLICATION_ID"]
 PATHLAB_ROLE = os.environ["PATHLAB_ROLE"]
 
+SECRET_KEY_ORCH = bytes.fromhex(os.environ["SECRET_KEY_ORCH"])
+
 DB_PATH = Path.cwd() / "orchard.db"
 DB_URL = "https://api.rhythm.cafe/orchard.db"
 
