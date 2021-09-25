@@ -37,10 +37,10 @@ router = SlashRouter(routes=[
     )
 ])
 
-"""
-Starlette handler for the /interactions endpoint.
-"""
 async def interaction_handler(request):
+    """
+    Starlette handler for the /interactions endpoint.
+    """
     # Check the headers are correct: https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
     verify_key = VerifyKey(bytes.fromhex(PUBLIC_KEY))
     rheaders = defaultdict(str, request.headers)
@@ -72,10 +72,11 @@ async def interaction_handler(request):
     print(body)
     return JSONResponse({'hello': 'world'})
 
-"""
-Before launching, update the slash commands defined by the router.
-"""
+
 async def prerun_update_slash_commands():
+    """
+    Before launching, update the slash commands defined by the router.  
+    """
     print("updating slash commands...")
     payload = router.api()
     print(payload)
@@ -89,10 +90,11 @@ async def prerun_update_slash_commands():
     print((await update_slash_permissions(payload2)).json())
     print("done!")
 
-"""
-Before launching, if we don't have our copy of the db download it from api.rhythm.cafe
-"""
+
 async def prerun_get_db():
+    """
+    Before launching, if we don't have our copy of the db download it from api.rhythm.cafe
+    """
     db_path = Path(DB_PATH)
     if not db_path.is_file():
         print(f"no db found at {DB_PATH}, downloading...")
