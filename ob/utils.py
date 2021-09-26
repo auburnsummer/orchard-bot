@@ -1,3 +1,5 @@
+import sqlite3
+from ob.constants import DB_PATH
 
 def get_slash_args(args, body):
     """
@@ -8,9 +10,21 @@ def get_slash_args(args, body):
         options = body["data"]["options"]
         options_dict = {option["name"]: option["value"] for option in options}
         return [options_dict[arg] if arg in options_dict else None for arg in args]
-    except KeyError:
+    except KeyError: # No arguments were given (e.g. all arguments are optional and we didn't get any of them)
         return [None for _ in args]
 
 
 def get_id_from_response(res):
     return res.json()['id']
+
+# from stackoverflow
+class hub_conn():
+    def __init__(self):
+        self.file=DB_PATH
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.file)
+        self.conn.row_factory = sqlite3.Row
+        return self.conn.cursor()
+    def __exit__(self, type, value, traceback):
+        self.conn.commit()
+        self.conn.close()

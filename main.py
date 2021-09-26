@@ -27,12 +27,22 @@ import ob.crosscode as crosscode
 router = SlashRouter(routes=[
     SlashRoute(name='ping', description='responds with pong!', handler=commands.ping),
     SlashRoute(
-        name='zpasscode',
+        name='plpasscode',
         description='return a passcode for pathlab use (pathlab people only)',
         options=[
             SlashOption(type=OptionType.STRING, name="check", description="put a passcode here to check it", required=False)
         ],
         handler=commands.passcode,
+        defer=True
+    ),
+    SlashRoute(
+        name='plapprove',
+        description='get or set the approval value of a level',
+        options=[
+            SlashOption(type=OptionType.STRING, name="id", description="id of the level", required=True),
+            SlashOption(type=OptionType.INTEGER, name="approval", description="put a value here to set", required=False)
+        ],
+        handler=commands.approve,
         defer=True
     )
 ])
