@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+
+load_dotenv()
 import os
 from pathlib import Path
 
@@ -15,6 +18,8 @@ SECRET_KEY_ORCH = bytes.fromhex(os.environ["SECRET_KEY_ORCH"])
 
 DB_PATH = Path.cwd() / "orchard.db"
 DB_URL = "https://api.rhythm.cafe/orchard.db"
+
+ORCHARD_API_URL = "https://api.rhythm.cafe/orchard.json"
 
 class ComponentType:
     ACTION_ROW = 1

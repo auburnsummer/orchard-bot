@@ -1,9 +1,5 @@
-# Load and run dotenv before everything else
-from dotenv import load_dotenv
 import httpx
-load_dotenv()
 
-import json
 from collections import defaultdict
 
 from starlette.applications import Starlette
