@@ -62,5 +62,6 @@ async def get_status(id):
         row = curr.fetchone()
         return row
 
-def set_status(id, obj):
-    pass
+async def set_status(id, obj):
+    await sync(id)
+    # some sort of sqlite thing i guess
