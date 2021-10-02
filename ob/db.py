@@ -55,7 +55,8 @@ async def sync(id):
 
 
 # schema: https://github.com/auburnsummer/rd-indexer/blob/main/sql/levels.sql
-def get_status(id):
+async def get_status(id):
+    await sync(id)
     with hub_conn() as conn:
         curr = conn.execute("SELECT * FROM status WHERE id = ?", [id])
         row = curr.fetchone()

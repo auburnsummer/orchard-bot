@@ -23,11 +23,19 @@ class Interactor:
     async def __aenter__(self):
         return self
 
-    async def __aexit__(self, *excinfo):
+    async def __aexit__(self, exc_type, exc_value, traceback):
         # remove any remaining UUIDS.
         for uuid in self.crosscode_uuids:
             cc.clean(uuid)
+        # if there's an exception, edit the message with a default thing.
+        if exc_type is not None:
+            await self.edit(
+                MessageBuilder()
+                .content(f"An unknown error occured! This is a bug. {repr(exc_type)} {exc_value}"),
+                "@original"
+        )
         await self.client.aclose()
+        return True # don't propogate any error
 
     async def get(self, id):
         """
