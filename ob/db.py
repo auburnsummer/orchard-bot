@@ -2,6 +2,9 @@ from ob.utils import hub_conn
 from ob.constants import ORCHARD_API_URL
 import httpx
 
+from pypika import Query, Table, Field, Parameter
+
+
 async def datasette_query(sql, shape='array'):
     params = {
         '_shape': shape,
@@ -64,4 +67,13 @@ async def get_status(id):
 
 async def set_status(id, obj):
     await sync(id)
-    # some sort of sqlite thing i guess
+    
+    table = Table("status")
+
+    q = Query.update(table)
+    for pair in obj.items():
+        q = q.set(*pair)
+    q = q.where(table.id == Parameter(':id'))
+    
+    with hub_conn() as conn:
+        conn.execute(str(q), {'id': id})

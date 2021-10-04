@@ -1,7 +1,7 @@
 from ob.interactions import Interactor
 from ob.message_builder import MessageBuilder as M
 from ob.utils import get_slash_args
-from ob.db import get_status
+from ob.db import get_status, set_status
 
 
 async def approve(body):
@@ -17,6 +17,5 @@ async def approve(body):
                 message = M().content(f"😰 I couldn't find a level by the id {id}. Check the spelling. If you're sure this should exist, this might be a bug. ping auburn!")
             await i.edit(message, "@original")
         else:
-            print(id)
-            print(approval)
-            await i.edit(M().content("efefefef"), "@original")
+            await set_status(id, {'approval': approval})
+            await i.edit(M().content(f"id {id} set to {approval}"), "@original")
