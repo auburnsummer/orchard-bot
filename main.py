@@ -115,7 +115,8 @@ async def prerun_get_db():
 app = Starlette(debug=True, routes=[
     Route('/interactions', interaction_handler, methods=['POST']),
     Route('/interactions2', interaction_handler, methods=['POST']),
-    Route('/orchard.db', handlers.orchard_dot_db, methods=['GET'])
+    Route('/orchard.db', handlers.orchard_dot_db, methods=['GET']),
+    Route('/set_approval', handlers.set_approval, methods=['POST'])
 ], on_startup=[
     prerun_update_slash_commands,
     prerun_get_db
