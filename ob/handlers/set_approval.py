@@ -20,10 +20,16 @@ async def set_approval(request):
     # return JSONResponse({'hello': 'world'}, 200);
 
     # get stuff out from the body?
+    id = request.path_params['id']
+
     try:
-        body = await request.json()
-        await set_status(body['id'], body['value'])
-        return JSONResponse(await get_status(body['id']))
+        if request.method.lower() == 'post':
+            body = await request.json()
+            await set_status(id, body)
+            return JSONResponse(await get_status(id))
+        else:
+            # it's a get request.
+            return JSONResponse(await get_status(id))
     except Exception as e:
         return JSONResponse({'error': str(e)}, 500)
     

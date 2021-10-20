@@ -116,7 +116,7 @@ app = Starlette(debug=True, routes=[
     Route('/interactions', interaction_handler, methods=['POST']),
     Route('/interactions2', interaction_handler, methods=['POST']),
     Route('/orchard.db', handlers.orchard_dot_db, methods=['GET']),
-    Route('/set_approval', handlers.set_approval, methods=['POST'])
+    Route('/approval/{id}', handlers.set_approval, methods=['POST', 'GET'])
 ], on_startup=[
     prerun_update_slash_commands,
     prerun_get_db
