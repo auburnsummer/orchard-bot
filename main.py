@@ -3,8 +3,10 @@ import httpx
 from collections import defaultdict
 
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
 from nacl.signing import VerifyKey
@@ -120,6 +122,8 @@ app = Starlette(debug=True, routes=[
 ], on_startup=[
     prerun_update_slash_commands,
     prerun_get_db
+], middleware=[
+    Middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
 ])
 
 # Discord requires HTTPS. I'm using a cloudflare proxy, but it should also be possible to use a reverse
