@@ -30,6 +30,10 @@ router = SlashRouter(routes=[
         options=[
             SlashOption(type=OptionType.STRING, name="check", description="put a passcode here to check it", required=False)
         ],
+        permissions=[
+            SlashOptionPermission(id=PATHLAB_ROLE, type=PermissionType.ROLE, permission=True)
+        ],
+        default_permission=False,
         handler=commands.passcode,
         defer=True
     ),
@@ -40,6 +44,10 @@ router = SlashRouter(routes=[
             SlashOption(type=OptionType.STRING, name="id", description="id of the level", required=True),
             SlashOption(type=OptionType.INTEGER, name="approval", description="put a value here to set", required=False)
         ],
+        permissions=[
+            SlashOptionPermission(id=PATHLAB_ROLE, type=PermissionType.ROLE, permission=True)
+        ],
+        default_permission=False,
         handler=commands.approve,
         defer=True
     )
