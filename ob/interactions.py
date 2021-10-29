@@ -1,14 +1,11 @@
 from ob.message_builder import MessageBuilder
 import httpx
 
-from .constants import APPLICATION_ID, DISCORD_API_URL, BOT_TOKEN
-from uuid import uuid4
+from .constants import APPLICATION_ID, DISCORD_API_URL
 
 import ob.crosscode as cc
 
 base_url = f"{DISCORD_API_URL}/webhooks/{APPLICATION_ID}"
-
-bot_auth = {'Authorization': f"Bot {BOT_TOKEN}"}
 
 class Interactor:
     """
@@ -42,8 +39,7 @@ class Interactor:
         Wrapper around discord API get message (from this webhook)
         """
         return await self.client.get(
-            f"{base_url}/{self._token}/messages/{id}",
-            headers=bot_auth
+            f"{base_url}/{self._token}/messages/{id}"
         )
 
     async def edit(self, mb: MessageBuilder, id):
@@ -54,8 +50,7 @@ class Interactor:
         """
         return await self.client.patch(
             f"{base_url}/{self._token}/messages/{id}",
-            json=mb.payload(),
-            headers=bot_auth
+            json=mb.payload()
         )
 
     async def post(self, mb: MessageBuilder):
@@ -66,8 +61,7 @@ class Interactor:
         """
         return await self.client.post(
             f"{base_url}/{self._token}",
-            json=mb.payload(),
-            headers=bot_auth
+            json=mb.payload()
         )
 
     async def delete(self, id):
@@ -75,8 +69,7 @@ class Interactor:
         Wrapper around discord API delete message.
         """
         return await self.client.delete(
-            f"{base_url}/{self._token}/messages/{id}",
-            headers=bot_auth
+            f"{base_url}/{self._token}/messages/{id}"
         )
 
     async def uuid(self):
