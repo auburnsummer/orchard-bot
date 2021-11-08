@@ -48,11 +48,11 @@ async def sync(id):
     with hub_conn() as conn:
         # we can build this with string operations because the row names come from datasette which is trusted.
         columns = levels_resp['columns']
-        sql = f"INSERT INTO level {rows_descriptor(columns)} VALUES {qmark_descriptor(columns)}"
+        sql = f"INSERT OR IGNORE INTO level {rows_descriptor(columns)} VALUES {qmark_descriptor(columns)}"
         curr = conn.executemany(sql, levels_resp['rows'])
         # ...then insert the status table!
         columns = status_resp['columns']
-        sql = f"INSERT INTO status {rows_descriptor(columns)} VALUES {qmark_descriptor(columns)}"
+        sql = f"INSERT OR IGNORE INTO status {rows_descriptor(columns)} VALUES {qmark_descriptor(columns)}"
         curr = conn.executemany(sql, status_resp['rows'])
 
 
